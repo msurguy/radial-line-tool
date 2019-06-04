@@ -3,7 +3,7 @@
     <svg ref="renderedPolygons" width="700" height="700" title="radial lines" version="1.1" viewBox="0 0 700 700" xmlns="http://www.w3.org/2000/svg">
       <g transform="translate(350, 350)">
         <desc>sf:{{scaleFormula}};rf:{{rotationFormula}};qt:{{quantity}};sd:{{sides}};rn:{{roundness}};rd:{{radius}};sa:{{startAngle}};</desc>
-        <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :lineData="polygon"></closed-polyline>
+        <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :index="index" :radiusFormula="radiusFormula(index)"></closed-polyline>
       </g>
     </svg>
   </div>
@@ -13,6 +13,7 @@
 /* eslint-disable standard/object-curly-even-spacing,no-new-func */
 import { eventBus } from '@/main'
 import ClosedPolyline from './ClosedPolyline'
+import { range, scaleLinear, max } from 'd3'
 
 export default {
   name: 'Polygons',
@@ -122,6 +123,20 @@ export default {
         arr.push([xo, yo])
       }
       return arr
+    },
+    radiusFormula (index) {
+      let minRange = 300
+      let maxRange = 600
+
+      let pathBreaks = 20
+      let data = range(pathBreaks).map(function (d) {
+        return 10 * Math.random()
+      })
+
+      let radiusValues = scaleLinear()
+        .domain([0, max(data)])
+        .range([minRange, maxRange])
+      return radiusValues(3 * Math.random())
     },
     scaleFunc (x) {
       function generateFunc (form) {
