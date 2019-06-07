@@ -11,11 +11,7 @@
       <slider :left-icon="startAngle.leftIcon" :right-icon="startAngle.rightIcon" :step="1" :min="0" :max="360" label="Starting Angle" v-model.number="startAngle.value"></slider>
       <text-input label="Scale Formula" @reset="resetScaleFormula" v-model="scaleFormula"></text-input>
       <text-input label="Rotation Formula" @reset="resetRotationFormula" v-model="rotationFormula"></text-input>
-      <select v-model="curve.selected">
-        <option v-for="option in curve.options" :key="option.name" v-bind:value="option.value">
-          {{ option.text }}
-        </option>
-      </select>
+      <select-field label="Curve Options" v-model="curve.selected" :options="curve.options"></select-field>
       <div class="container mt-3">
         <div class="row">
           <div class="col-12">
@@ -54,6 +50,7 @@
 import Polygons from './components/Polygons'
 import Slider from './components/Slider'
 import TextInput from './components/TextInput'
+import SelectField from './components/SelectField'
 import { eventBus } from '@/main'
 
 function initialData () {
@@ -130,12 +127,24 @@ function initialData () {
       selected: 'curveCardinalClosed',
       options: [
         { text: 'curveCardinalClosed', value: 'curveCardinalClosed' },
+        { text: 'curveBundle', value: 'curveBundle' },
         { text: 'curveLinear', value: 'curveLinear' },
+        { text: 'curveLinearClosed', value: 'curveLinearClosed' },
         { text: 'curveBasis', value: 'curveBasis' },
+        { text: 'curveBasisOpen', value: 'curveBasisOpen' },
+        { text: 'curveBasisClosed', value: 'curveBasisClosed' },
+        { text: 'curveCardinal', value: 'curveCardinal' },
+        { text: 'curveCardinalOpen', value: 'curveCardinalOpen' },
+        { text: 'curveCardinalClosed', value: 'curveCardinalClosed' },
+        { text: 'curveCatmullRom', value: 'curveCatmullRom' },
+        { text: 'curveCatmullRomClosed', value: 'curveCatmullRomClosed' },
+        { text: 'curveCatmullRomOpen', value: 'curveCatmullRomOpen' },
+        { text: 'curveNatural', value: 'curveNatural' },
         { text: 'curveStep', value: 'curveStep' },
         { text: 'curveStepAfter', value: 'curveStepAfter' },
         { text: 'curveStepBefore', value: 'curveStepBefore' },
-        { text: 'curveMonotoneX', value: 'curveMonotoneX' }
+        { text: 'curveMonotoneX', value: 'curveMonotoneX' },
+        { text: 'curveRadialLinear', value: 'curveRadialLinear' }
       ]
     }
   }
@@ -146,7 +155,8 @@ export default {
   components: {
     Polygons,
     Slider,
-    TextInput
+    TextInput,
+    SelectField
   },
   data () {
     return initialData()

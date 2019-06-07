@@ -3,7 +3,11 @@
 </template>
 
 <script>
-import { radialLine, curveCardinalClosed, curveLinear, curveBasis, curveStepAfter, curveStepBefore, curveMonotoneX, curveStep } from 'd3'
+import { radialLine, curveCardinalClosed,
+  curveBundle, curveLinear, curveLinearClosed, curveBasis,
+  curveBasisOpen, curveBasisClosed, curveCardinal,
+  curveCardinalOpen, curveCatmullRom, curveCatmullRomClosed,
+  curveCatmullRomOpen, curveNatural, curveStepAfter, curveStepBefore, curveMonotoneX, curveStep } from 'd3'
 
 export default {
   name: 'ClosedPolyline',
@@ -25,8 +29,6 @@ export default {
   },
   computed: {
     line () {
-      console.log(this.curve)
-      // let radialLineGenerator = radialLine().curve(curveCardinalClosed.tension(this.roundness))
       const path = radialLine()
         .curve(this.getCurve(this.curve))
       return path(this.lineData)
@@ -49,6 +51,26 @@ export default {
           return curveMonotoneX
         case 'curveStep':
           return curveStep
+        case 'curveBundle':
+          return curveBundle
+        case 'curveLinearClosed':
+          return curveLinearClosed
+        case 'curveBasisOpen':
+          return curveBasisOpen
+        case 'curveBasisClosed':
+          return curveBasisClosed
+        case 'curveCardinal':
+          return curveCardinal
+        case 'curveCardinalOpen':
+          return curveCardinalOpen
+        case 'curveCatmullRom':
+          return curveCatmullRom
+        case 'curveCatmullRomClosed':
+          return curveCatmullRomClosed
+        case 'curveCatmullRomOpen':
+          return curveCatmullRomOpen
+        case 'curveNatural':
+          return curveNatural
       }
     }
   }
