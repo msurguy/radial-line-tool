@@ -2,10 +2,11 @@
   <div class="d-flex" id="wrapper">
     <!-- Sidebar -->
     <div id="sidebar-wrapper">
-      <div class="sidebar-heading text-center mt-3 mb-3"><h2>Twisted Polygons</h2></div>
-      <slider :left-icon="radius.leftIcon" :right-icon="radius.rightIcon" :step="0.1" :min="0" :max="100" label="Radius" v-model.number="radius.value"></slider>
-      <slider :left-icon="sides.leftIcon" :right-icon="sides.rightIcon" :min="3" :max="12" label="Sides" v-model.number="sides.value"></slider>
-      <slider :left-icon="quantity.leftIcon" :right-icon="quantity.rightIcon" :min="1" :max="100" label="Quantity" v-model.number="quantity.value"></slider>
+      <div class="sidebar-heading text-center mt-3 mb-3"><h2>Shells</h2></div>
+      <slider :left-icon="radius.leftIcon" :right-icon="radius.rightIcon" :step="1" :min="0" :max="300" label="Min Radius" v-model.number="radius.min"></slider>
+      <slider :left-icon="radius.leftIcon" :right-icon="radius.rightIcon" :step="1" :min="0" :max="300" label="Max Radius" v-model.number="radius.max"></slider>
+      <slider :left-icon="sides.leftIcon" :right-icon="sides.rightIcon" :min="10" :max="400" label="Sides" v-model.number="sides.value"></slider>
+      <slider :left-icon="quantity.leftIcon" :right-icon="quantity.rightIcon" :min="5" :max="100" label="Quantity" v-model.number="quantity.value"></slider>
       <slider :left-icon="roundness.leftIcon" :right-icon="roundness.rightIcon" :step="0.1" :min="-2" :max="2" label="Roundness" v-model.number="roundness.value"></slider>
       <slider :left-icon="startAngle.leftIcon" :right-icon="startAngle.rightIcon" :step="1" :min="0" :max="360" label="Starting Angle" v-model.number="startAngle.value"></slider>
       <text-input label="Scale Formula" @reset="resetScaleFormula" v-model="scaleFormula"></text-input>
@@ -34,7 +35,7 @@
     <div id="page-content-wrapper">
       <div class="container-fluid">
         <div id="paper">
-          <Polygons :scale-formula="scaleFormula" :rotationFormula="rotationFormula" :start-angle="startAngle.value" :radius="radius.value" :sides="sides.value" :roundness="roundness.value" :quantity="quantity.value"></Polygons>
+          <Polygons :scale-formula="scaleFormula" :rotationFormula="rotationFormula" :start-angle="startAngle.value" :min-radius="radius.min" :max-radius="radius.max"  :sides="sides.value" :roundness="roundness.value" :quantity="quantity.value"></Polygons>
 
         </div>
       </div>
@@ -78,7 +79,7 @@ function initialData () {
         width: '22',
         height: '22'
       },
-      value: 5
+      value: 20
     },
     quantity: {
       leftIcon: {
@@ -117,7 +118,8 @@ function initialData () {
         width: '22',
         height: '22'
       },
-      value: 20
+      min: 20,
+      max: 50
     }
   }
 }

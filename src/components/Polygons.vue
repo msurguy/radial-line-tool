@@ -1,9 +1,9 @@
 <template>
   <div class="paper">
-    <svg ref="renderedPolygons" width="700" height="700" title="radial lines" version="1.1" viewBox="0 0 700 700" xmlns="http://www.w3.org/2000/svg">
-      <g transform="translate(350, 350)">
-        <desc>sf:{{scaleFormula}};rf:{{rotationFormula}};qt:{{quantity}};sd:{{sides}};rn:{{roundness}};rd:{{radius}};sa:{{startAngle}};</desc>
-        <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :index="index" :radiusFormula="radiusFormula(index)"></closed-polyline>
+    <svg ref="renderedPolygons" width="800" height="800" title="polygons" version="1.1" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(400, 400)">
+        <desc>sf:{{scaleFormula}};rf:{{rotationFormula}};qt:{{quantity}};sd:{{sides}};rn:{{roundness}};minrd:{{minRadius}};maxrd:{{maxRadius}};sa:{{startAngle}};</desc>
+        <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :lineData="polygon"></closed-polyline>
       </g>
     </svg>
   </div>
@@ -13,7 +13,36 @@
 /* eslint-disable standard/object-curly-even-spacing,no-new-func */
 import { eventBus } from '@/main'
 import ClosedPolyline from './ClosedPolyline'
-import { range, scaleLinear, max } from 'd3'
+
+let seed = 2
+
+let seededRandom = () => {
+  let x = Math.sin(seed++) * 10000
+  return x - Math.floor(x)
+}
+
+let randomInRange = (min, max) => {
+  return seededRandom() * (max - min) + min
+}
+
+let generatePoints = (minRadius, maxRadius, breaks) => {
+  let points = []
+  const maxAngle = Math.PI * 2
+  const slice = maxAngle / breaks
+
+  for (let i = 0; i <= breaks; i++) {
+    const point = [ i * slice, randomInRange(minRadius, maxRadius) ]
+    points.push(point)
+  }
+
+  points[0][1] = points[points.length - 1][1]
+
+  return points
+}
+
+let degreesToRadians = (degrees) => {
+  return degrees * (Math.PI / 180)
+}
 
 export default {
   name: 'Polygons',
@@ -39,7 +68,7 @@ export default {
     },
     quantity: {
       type: Number,
-      default: 20
+      default: 10
     },
     sides: {
       type: Number,
@@ -49,9 +78,13 @@ export default {
       type: Number,
       default: 0.8
     },
-    radius: {
+    minRadius: {
       type: Number,
       default: 20
+    },
+    maxRadius: {
+      type: Number,
+      default: 50
     },
     startAngle: {
       type: Number,
@@ -86,7 +119,10 @@ export default {
     startAngle () {
       this.generatePolygonData()
     },
-    radius () {
+    minRadius () {
+      this.generatePolygonData()
+    },
+    maxRadius () {
       this.generatePolygonData()
     },
     roundness () {
@@ -112,31 +148,10 @@ export default {
     }
   },
   methods: {
-    createPolygon (x, y, numOfSides, radius, startAngle) {
-      let arr = []
-      let xo
-      let yo
-      for (let i = 0; i < numOfSides; i++) {
-        let t = (2 * Math.PI / numOfSides * i) + startAngle * (Math.PI / 180)
-        xo = x + radius * Math.sin(t)
-        yo = y + radius * Math.cos(t)
-        arr.push([xo, yo])
-      }
-      return arr
-    },
-    radiusFormula (index) {
-      let minRange = 300
-      let maxRange = 600
-
-      let pathBreaks = 20
-      let data = range(pathBreaks).map(function (d) {
-        return 10 * Math.random()
+    transformPoints (points, scaleIncrement, rotationIncrement) {
+      return points.map((point) => {
+        return [degreesToRadians(rotationIncrement) + point[0], scaleIncrement + point[1]]
       })
-
-      let radiusValues = scaleLinear()
-        .domain([0, max(data)])
-        .range([minRange, maxRange])
-      return radiusValues(3 * Math.random())
     },
     scaleFunc (x) {
       function generateFunc (form) {
@@ -179,8 +194,10 @@ export default {
     },
     generatePolygonData () {
       this.polygons = []
+      let originalPoints = generatePoints(this.minRadius, this.maxRadius, this.sides)
       for (let i = 0; i < this.quantity; i++) {
-        this.polygons.push(i)
+        // this.polygons.push(this.createPolygon(this.x, this.y, this.sides, this.radius + this.scaleFunc(i), this.startAngle + this.rotationFunc(i)))
+        this.polygons.push(this.transformPoints(originalPoints, this.scaleFunc(i), this.startAngle + this.rotationFunc(i)))
       }
     },
     downloadSVG () {
@@ -215,7 +232,7 @@ export default {
 </script>
 
 <style scoped>
-.paper {
-  display: block;
-}
+  .paper {
+    display: block;
+  }
 </style>
