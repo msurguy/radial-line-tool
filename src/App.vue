@@ -11,6 +11,11 @@
       <slider :left-icon="startAngle.leftIcon" :right-icon="startAngle.rightIcon" :step="1" :min="0" :max="360" label="Starting Angle" v-model.number="startAngle.value"></slider>
       <text-input label="Scale Formula" @reset="resetScaleFormula" v-model="scaleFormula"></text-input>
       <text-input label="Rotation Formula" @reset="resetRotationFormula" v-model="rotationFormula"></text-input>
+      <select v-model="curve.selected">
+        <option v-for="option in curve.options" :key="option.name" v-bind:value="option.value">
+          {{ option.text }}
+        </option>
+      </select>
       <div class="container mt-3">
         <div class="row">
           <div class="col-12">
@@ -35,7 +40,7 @@
     <div id="page-content-wrapper">
       <div class="container-fluid">
         <div id="paper">
-          <Polygons :scale-formula="scaleFormula" :rotationFormula="rotationFormula" :start-angle="startAngle.value" :min-radius="radius.min" :max-radius="radius.max"  :sides="sides.value" :roundness="roundness.value" :quantity="quantity.value"></Polygons>
+          <Polygons :scale-formula="scaleFormula" :rotationFormula="rotationFormula" :start-angle="startAngle.value" :min-radius="radius.min" :max-radius="radius.max"  :sides="sides.value" :roundness="roundness.value" :quantity="quantity.value" :curve="curve.selected"></Polygons>
 
         </div>
       </div>
@@ -120,6 +125,18 @@ function initialData () {
       },
       min: 20,
       max: 50
+    },
+    curve: {
+      selected: 'curveCardinalClosed',
+      options: [
+        { text: 'curveCardinalClosed', value: 'curveCardinalClosed' },
+        { text: 'curveLinear', value: 'curveLinear' },
+        { text: 'curveBasis', value: 'curveBasis' },
+        { text: 'curveStep', value: 'curveStep' },
+        { text: 'curveStepAfter', value: 'curveStepAfter' },
+        { text: 'curveStepBefore', value: 'curveStepBefore' },
+        { text: 'curveMonotoneX', value: 'curveMonotoneX' }
+      ]
     }
   }
 }

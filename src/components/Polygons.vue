@@ -3,7 +3,7 @@
     <svg ref="renderedPolygons" width="800" height="800" title="polygons" version="1.1" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
       <g transform="translate(400, 400)">
         <desc>sf:{{scaleFormula}};rf:{{rotationFormula}};qt:{{quantity}};sd:{{sides}};rn:{{roundness}};minrd:{{minRadius}};maxrd:{{maxRadius}};sa:{{startAngle}};</desc>
-        <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :lineData="polygon"></closed-polyline>
+        <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :lineData="polygon" :curve="curve"></closed-polyline>
       </g>
     </svg>
   </div>
@@ -97,6 +97,10 @@ export default {
     y: {
       type: Number,
       default: 200
+    },
+    curve: {
+      type: String,
+      default: 'curveCardinalClosed'
     }
   },
   data () {
@@ -123,9 +127,6 @@ export default {
       this.generatePolygonData()
     },
     maxRadius () {
-      this.generatePolygonData()
-    },
-    roundness () {
       this.generatePolygonData()
     },
     sides () {
