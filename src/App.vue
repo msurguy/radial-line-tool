@@ -5,10 +5,11 @@
       <div class="sidebar-heading text-center mt-3 mb-3"><h2>Shells</h2></div>
       <slider :left-icon="radius.leftIcon" :right-icon="radius.rightIcon" :step="1" :min="0" :max="300" label="Min Radius" v-model.number="radius.min"></slider>
       <slider :left-icon="radius.leftIcon" :right-icon="radius.rightIcon" :step="1" :min="0" :max="300" label="Max Radius" v-model.number="radius.max"></slider>
-      <slider :left-icon="sides.leftIcon" :right-icon="sides.rightIcon" :min="10" :max="400" label="Sides" v-model.number="sides.value"></slider>
-      <slider :left-icon="quantity.leftIcon" :right-icon="quantity.rightIcon" :min="5" :max="100" label="Quantity" v-model.number="quantity.value"></slider>
+      <slider :left-icon="sides.leftIcon" :right-icon="sides.rightIcon" :min="3" :max="200" label="Sides" v-model.number="sides.value"></slider>
+      <slider :left-icon="quantity.leftIcon" :right-icon="quantity.rightIcon" :min="3" :max="100" label="Quantity" v-model.number="quantity.value"></slider>
       <slider :left-icon="roundness.leftIcon" :right-icon="roundness.rightIcon" :step="0.1" :min="-2" :max="2" label="Roundness" v-model.number="roundness.value"></slider>
       <slider :left-icon="startAngle.leftIcon" :right-icon="startAngle.rightIcon" :step="1" :min="0" :max="360" label="Starting Angle" v-model.number="startAngle.value"></slider>
+      <slider :left-icon="maxAngle.leftIcon" :right-icon="maxAngle.rightIcon" :step="1" :min="0" :max="360" label="Arc Extent" v-model.number="maxAngle.value"></slider>
       <text-input label="Scale Formula" @reset="resetScaleFormula" v-model="scaleFormula"></text-input>
       <text-input label="Rotation Formula" @reset="resetRotationFormula" v-model="rotationFormula"></text-input>
       <select-field label="Curve Options" v-model="curve.selected" :options="curve.options"></select-field>
@@ -36,8 +37,18 @@
     <div id="page-content-wrapper">
       <div class="container-fluid">
         <div id="paper">
-          <Polygons :scale-formula="scaleFormula" :rotationFormula="rotationFormula" :start-angle="startAngle.value" :min-radius="radius.min" :max-radius="radius.max"  :sides="sides.value" :roundness="roundness.value" :quantity="quantity.value" :curve="curve.selected"></Polygons>
-
+          <Polygons
+            :scale-formula="scaleFormula"
+            :rotationFormula="rotationFormula"
+            :start-angle="startAngle.value"
+            :min-radius="radius.min"
+            :max-radius="radius.max"
+            :max-angle="maxAngle.value"
+            :sides="sides.value"
+            :roundness="roundness.value"
+            :quantity="quantity.value"
+            :curve="curve.selected">
+          </Polygons>
         </div>
       </div>
     </div>
@@ -57,6 +68,19 @@ function initialData () {
   return {
     scaleFormula: 'i+i*7',
     rotationFormula: '10*Math.sin(i/2)',
+    maxAngle: {
+      leftIcon: {
+        icon: 'angle-short',
+        width: '22',
+        height: '22'
+      },
+      rightIcon: {
+        icon: 'angle-wide',
+        width: '22',
+        height: '22'
+      },
+      value: 360
+    },
     startAngle: {
       leftIcon: {
         icon: 'angle-short',
@@ -81,7 +105,7 @@ function initialData () {
         width: '22',
         height: '22'
       },
-      value: 20
+      value: 10
     },
     quantity: {
       leftIcon: {
@@ -94,7 +118,7 @@ function initialData () {
         width: '22',
         height: '22'
       },
-      value: 10
+      value: 3
     },
     roundness: {
       leftIcon: {
@@ -127,24 +151,20 @@ function initialData () {
       selected: 'curveCardinalClosed',
       options: [
         { text: 'curveCardinalClosed', value: 'curveCardinalClosed' },
+        { text: 'curveLinearClosed', value: 'curveLinearClosed' },
+        { text: 'curveBasisClosed', value: 'curveBasisClosed' },
+        { text: 'curveCatmullRomClosed', value: 'curveCatmullRomClosed' },
+        { text: 'curveNatural', value: 'curveNatural' },
         { text: 'curveBundle', value: 'curveBundle' },
         { text: 'curveLinear', value: 'curveLinear' },
-        { text: 'curveLinearClosed', value: 'curveLinearClosed' },
+        { text: 'curveStep', value: 'curveStep' },
+        { text: 'curveCardinal', value: 'curveCardinal' },
         { text: 'curveBasis', value: 'curveBasis' },
         { text: 'curveBasisOpen', value: 'curveBasisOpen' },
-        { text: 'curveBasisClosed', value: 'curveBasisClosed' },
-        { text: 'curveCardinal', value: 'curveCardinal' },
         { text: 'curveCardinalOpen', value: 'curveCardinalOpen' },
-        { text: 'curveCardinalClosed', value: 'curveCardinalClosed' },
         { text: 'curveCatmullRom', value: 'curveCatmullRom' },
-        { text: 'curveCatmullRomClosed', value: 'curveCatmullRomClosed' },
         { text: 'curveCatmullRomOpen', value: 'curveCatmullRomOpen' },
-        { text: 'curveNatural', value: 'curveNatural' },
-        { text: 'curveStep', value: 'curveStep' },
-        { text: 'curveStepAfter', value: 'curveStepAfter' },
-        { text: 'curveStepBefore', value: 'curveStepBefore' },
-        { text: 'curveMonotoneX', value: 'curveMonotoneX' },
-        { text: 'curveRadialLinear', value: 'curveRadialLinear' }
+        { text: 'curveMonotoneX', value: 'curveMonotoneX' }
       ]
     }
   }

@@ -25,10 +25,9 @@ let randomInRange = (min, max) => {
   return seededRandom() * (max - min) + min
 }
 
-let generatePoints = (minRadius, maxRadius, breaks) => {
+let generatePoints = (maxAngle, minRadius, maxRadius, breaks) => {
   let points = []
-  const maxAngle = Math.PI * 2
-  const slice = maxAngle / breaks
+  const slice = degreesToRadians(maxAngle) / breaks
 
   for (let i = 0; i <= breaks; i++) {
     const point = [ i * slice, randomInRange(minRadius, maxRadius) ]
@@ -101,6 +100,10 @@ export default {
     curve: {
       type: String,
       default: 'curveCardinalClosed'
+    },
+    maxAngle: {
+      type: Number,
+      default: 360
     }
   },
   data () {
@@ -127,6 +130,9 @@ export default {
       this.generatePolygonData()
     },
     maxRadius () {
+      this.generatePolygonData()
+    },
+    maxAngle () {
       this.generatePolygonData()
     },
     sides () {
@@ -195,7 +201,7 @@ export default {
     },
     generatePolygonData () {
       this.polygons = []
-      let originalPoints = generatePoints(this.minRadius, this.maxRadius, this.sides)
+      let originalPoints = generatePoints(this.maxAngle, this.minRadius, this.maxRadius, this.sides)
       for (let i = 0; i < this.quantity; i++) {
         // this.polygons.push(this.createPolygon(this.x, this.y, this.sides, this.radius + this.scaleFunc(i), this.startAngle + this.rotationFunc(i)))
         this.polygons.push(this.transformPoints(originalPoints, this.scaleFunc(i), this.startAngle + this.rotationFunc(i)))

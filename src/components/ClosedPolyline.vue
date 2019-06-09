@@ -7,7 +7,7 @@ import { radialLine, curveCardinalClosed,
   curveBundle, curveLinear, curveLinearClosed, curveBasis,
   curveBasisOpen, curveBasisClosed, curveCardinal,
   curveCardinalOpen, curveCatmullRom, curveCatmullRomClosed,
-  curveCatmullRomOpen, curveNatural, curveStepAfter, curveStepBefore, curveMonotoneX, curveStep } from 'd3'
+  curveCatmullRomOpen, curveNatural, curveMonotoneX, curveStep } from 'd3'
 
 export default {
   name: 'ClosedPolyline',
@@ -43,16 +43,12 @@ export default {
           return curveLinear
         case 'curveBasis':
           return curveBasis
-        case 'curveStepAfter':
-          return curveStepAfter
-        case 'curveStepBefore':
-          return curveStepBefore
         case 'curveMonotoneX':
           return curveMonotoneX
         case 'curveStep':
           return curveStep
         case 'curveBundle':
-          return curveBundle
+          return curveBundle.beta(this.roundness)
         case 'curveLinearClosed':
           return curveLinearClosed
         case 'curveBasisOpen':
@@ -60,15 +56,15 @@ export default {
         case 'curveBasisClosed':
           return curveBasisClosed
         case 'curveCardinal':
-          return curveCardinal
+          return curveCardinal.tension(this.roundness)
         case 'curveCardinalOpen':
-          return curveCardinalOpen
+          return curveCardinalOpen.tension(this.roundness)
         case 'curveCatmullRom':
-          return curveCatmullRom
+          return curveCatmullRom.alpha(this.roundness)
         case 'curveCatmullRomClosed':
-          return curveCatmullRomClosed
+          return curveCatmullRomClosed.alpha(this.roundness)
         case 'curveCatmullRomOpen':
-          return curveCatmullRomOpen
+          return curveCatmullRomOpen.alpha(this.roundness)
         case 'curveNatural':
           return curveNatural
       }
