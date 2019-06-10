@@ -118,7 +118,7 @@ function initialData () {
         width: '22',
         height: '22'
       },
-      value: 3
+      value: 10
     },
     roundness: {
       leftIcon: {
