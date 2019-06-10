@@ -3,7 +3,7 @@
     <svg ref="renderedPolygons" width="800" height="800" title="polygons" version="1.1" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
       <g transform="translate(400, 400)">
         <desc>sf:{{scaleFormula}};rf:{{rotationFormula}};qt:{{quantity}};sd:{{sides}};rn:{{roundness}};minrd:{{minRadius}};maxrd:{{maxRadius}};sa:{{startAngle}};</desc>
-        <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :lineData="polygon" :curve="curve"></closed-polyline>
+        <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :lineData="polygon.line" :fill="polygon.fill" :curve="curve"></closed-polyline>
       </g>
     </svg>
   </div>
@@ -13,7 +13,8 @@
 /* eslint-disable standard/object-curly-even-spacing,no-new-func */
 import { eventBus } from '@/main'
 import ClosedPolyline from './ClosedPolyline'
-
+import {scaleSequential, interpolateSpectral, interpolateRdYlGn, interpolateGreys, interpolatePlasma, interpolateCool,
+  interpolateRainbow } from 'd3'
 let seed = 2
 
 let seededRandom = () => {
@@ -202,9 +203,11 @@ export default {
     generatePolygonData () {
       this.polygons = []
       let originalPoints = generatePoints(this.maxAngle, this.minRadius, this.maxRadius, this.sides)
-      for (let i = 0; i < this.quantity; i++) {
+      const color = scaleSequential(interpolateRainbow).domain([0, this.quantity])
+      for (let i = this.quantity; i > 0; i--) {
         // this.polygons.push(this.createPolygon(this.x, this.y, this.sides, this.radius + this.scaleFunc(i), this.startAngle + this.rotationFunc(i)))
-        this.polygons.push(this.transformPoints(originalPoints, this.scaleFunc(i), this.startAngle + this.rotationFunc(i)))
+        this.polygons.push({ line: this.transformPoints(originalPoints, this.scaleFunc(i), this.startAngle + this.rotationFunc(i)), fill: color(i) })
+        console.log(this.polygons[i])
       }
     },
     downloadSVG () {

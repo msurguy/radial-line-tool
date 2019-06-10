@@ -1,5 +1,5 @@
 <template>
-  <path stroke="#000000" stroke-width="0.4mm" fill="none" :d="line"></path>
+  <path stroke="none" stroke-width="0.4mm" :fill="fill" :d="line"></path>
 </template>
 
 <script>
@@ -25,6 +25,10 @@ export default {
     curve: {
       type: String,
       default: 'curveCardinalClosed'
+    },
+    fill: {
+      type: String,
+      default: 'none'
     }
   },
   computed: {
